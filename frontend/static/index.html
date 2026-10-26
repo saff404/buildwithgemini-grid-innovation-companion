@@ -1,0 +1,2393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UPGRADE // Galvanic Mechamorph Grid Companion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+
+<style>
+  :root {
+    --bg-black: #050807;
+    --bg-dark: #0a110d;
+    --bg-panel: #0d1712;
+    --bg-card: #111d17;
+    --border-dim: #1a3325;
+    --border-bright: #00ff66;
+    --circuit-green: #00ff66;
+    --circuit-glow: rgba(0, 255, 102, 0.45);
+    --circuit-dim: rgba(0, 255, 102, 0.15);
+    --text-primary: #e6fff0;
+    --text-secondary: #7fa890;
+    --text-muted: #4e735d;
+    --accent-white: #ffffff;
+    --fuel-nuclear: #00ff66;
+    --fuel-hydro: #00b4d8;
+    --fuel-gas: #ff9e00;
+    --fuel-wind: #70e000;
+    --fuel-solar: #ffd60a;
+    --font-cyber: 'Orbitron', system-ui, sans-serif;
+    --font-mono: 'Share Tech Mono', monospace;
+    --font-body: 'Inter', system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    background: var(--bg-black);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Galvanic Mechamorph Circuit Background */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: 
+      linear-gradient(to right, rgba(0, 255, 102, 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 255, 102, 0.03) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Scanline effect */
+  body::after {
+    content: " ";
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+    background-size: 100% 4px;
+    z-index: 999;
+    pointer-events: none;
+    opacity: 0.35;
+  }
+
+  /* Top HUD Bar */
+  header {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.25rem;
+    background: linear-gradient(180deg, #0d1712 0%, #080f0c 100%);
+    border-bottom: 1px solid var(--border-dim);
+    box-shadow: 0 4px 20px rgba(0, 255, 102, 0.08);
+  }
+
+  .omnitrix-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  /* Omnitrix Upgrade Core Icon */
+  .omni-badge {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #000;
+    border: 2px solid var(--border-bright);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 12px var(--circuit-glow);
+    animation: corePulse 3s infinite ease-in-out;
+  }
+  .omni-badge::before {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background: var(--circuit-green);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    box-shadow: 0 0 8px var(--circuit-green);
+  }
+  .omni-badge.active::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1px dashed var(--circuit-green);
+    animation: rotateDial 6s linear infinite;
+  }
+
+  @keyframes corePulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(0,255,102,0.4); }
+    50% { box-shadow: 0 0 20px rgba(0,255,102,0.85), 0 0 30px rgba(0,255,102,0.3); }
+  }
+  @keyframes rotateDial {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .brand-text h1 {
+    font-family: var(--font-cyber);
+    font-size: 1.15rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    color: #fff;
+    text-shadow: 0 0 10px var(--circuit-glow);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .brand-text h1 span {
+    color: var(--circuit-green);
+  }
+  .brand-text p {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.05em;
+  }
+
+  .sys-readouts {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+  .readout-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(0, 255, 102, 0.06);
+    border: 1px solid var(--border-dim);
+    border-radius: 6px;
+    padding: 0.3rem 0.65rem;
+  }
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--circuit-green);
+    box-shadow: 0 0 6px var(--circuit-green);
+  }
+
+  /* Nav Tabs for Workspace View */
+  .view-tabs {
+    display: flex;
+    gap: 0.35rem;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 0.25rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-dim);
+  }
+  .tab-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-secondary);
+    font-family: var(--font-cyber);
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: all 0.2s ease;
+  }
+  .tab-btn:hover {
+    color: #fff;
+    border-color: var(--border-dim);
+    background: rgba(0, 255, 102, 0.08);
+  }
+  .tab-btn.active {
+    background: rgba(0, 255, 102, 0.18);
+    border-color: var(--border-bright);
+    color: #fff;
+    box-shadow: 0 0 10px rgba(0, 255, 102, 0.25);
+  }
+
+  /* Main Workspace Layout */
+  .workspace-container {
+    position: relative;
+    z-index: 5;
+    flex: 1;
+    display: grid;
+    grid-template-columns: 410px 1fr 430px;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    overflow: hidden;
+  }
+
+  /* Single Column Mode when tabs are used */
+  .workspace-container.tab-mode-active {
+    display: block;
+    height: calc(100vh - 60px);
+  }
+  .workspace-container.tab-mode-active .panel {
+    display: none;
+    height: 100%;
+  }
+  .workspace-container.tab-mode-active .panel.active-panel {
+    display: flex;
+  }
+
+  /* Generic Panel Styling */
+  .panel {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-dim);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+  .panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--border-bright), transparent);
+    opacity: 0.6;
+  }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(180deg, rgba(0, 255, 102, 0.08) 0%, transparent 100%);
+    border-bottom: 1px solid var(--border-dim);
+  }
+  .panel-title {
+    font-family: var(--font-cyber);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+  .panel-title span.indicator {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: var(--circuit-green);
+    box-shadow: 0 0 6px var(--circuit-green);
+  }
+  .panel-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .p-btn {
+    background: rgba(0, 255, 102, 0.05);
+    border: 1px solid var(--border-dim);
+    color: var(--text-secondary);
+    border-radius: 4px;
+    padding: 0.25rem 0.55rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .p-btn:hover {
+    background: rgba(0, 255, 102, 0.2);
+    border-color: var(--border-bright);
+    color: #fff;
+  }
+
+  /* ------------------- PANE 1: UPGRADE CHAT ------------------- */
+  #chat-panel {
+    display: flex;
+    flex-direction: column;
+  }
+  #log {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .msg {
+    display: flex;
+    flex-direction: column;
+    max-width: 92%;
+    animation: fadeInMsg 0.25s ease-out;
+  }
+  @keyframes fadeInMsg {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg.user {
+    align-self: flex-end;
+    align-items: flex-end;
+  }
+  .msg.agent {
+    align-self: flex-start;
+    align-items: flex-start;
+  }
+
+  .msg-sender {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    margin-bottom: 0.2rem;
+    letter-spacing: 0.05em;
+  }
+  .msg.user .msg-sender {
+    color: var(--circuit-green);
+  }
+
+  .bubble {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+    color: var(--text-primary);
+    white-space: pre-wrap;
+    word-break: break-word;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  }
+  .msg.user .bubble {
+    background: linear-gradient(135deg, #0e2b1b 0%, #091a11 100%);
+    border-color: rgba(0, 255, 102, 0.4);
+    color: #fff;
+    box-shadow: 0 0 12px rgba(0, 255, 102, 0.15);
+  }
+  .bubble.rich {
+    background: transparent;
+    border: none;
+    padding: 0;
+    max-width: 100%;
+    white-space: normal;
+    box-shadow: none;
+  }
+
+  /* Quick Suggestion Chips */
+  .quick-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    padding: 0.5rem 0.85rem;
+    background: rgba(0, 0, 0, 0.25);
+    border-top: 1px solid rgba(0, 255, 102, 0.08);
+  }
+  .chip {
+    background: rgba(0, 255, 102, 0.05);
+    border: 1px solid var(--border-dim);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .chip:hover {
+    background: rgba(0, 255, 102, 0.18);
+    border-color: var(--border-bright);
+    color: #fff;
+  }
+
+  /* Form & Input */
+  form#form {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: #08100c;
+    border-top: 1px solid var(--border-dim);
+  }
+  #input {
+    flex: 1;
+    background: #050a07;
+    border: 1px solid var(--border-dim);
+    border-radius: 6px;
+    padding: 0.65rem 0.85rem;
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: 0.86rem;
+    outline: none;
+    transition: border 0.2s, box-shadow 0.2s;
+  }
+  #input:focus {
+    border-color: var(--border-bright);
+    box-shadow: 0 0 8px rgba(0, 255, 102, 0.3);
+  }
+  button.send-btn {
+    background: linear-gradient(135deg, #00ff66 0%, #00b347 100%);
+    color: #000;
+    font-family: var(--font-cyber);
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    border: none;
+    border-radius: 6px;
+    padding: 0 1.15rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  button.send-btn:hover {
+    box-shadow: 0 0 14px var(--circuit-glow);
+    filter: brightness(1.1);
+  }
+
+  /* ------------------- PANE 2: NEURAL KNOWLEDGE GRAPH (OBSIDIAN STYLE) ------------------- */
+  #graph-panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .graph-canvas-container {
+    flex: 1;
+    position: relative;
+    background: radial-gradient(circle at center, #0a1710 0%, #040806 100%);
+    overflow: hidden;
+  }
+  canvas#netGraph {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+  }
+  canvas#netGraph:active {
+    cursor: grabbing;
+  }
+
+  .graph-hud-top {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    pointer-events: none;
+  }
+  .graph-tag-filters {
+    display: flex;
+    gap: 4px;
+    pointer-events: auto;
+  }
+  .graph-filter-btn {
+    background: rgba(5, 12, 8, 0.8);
+    border: 1px solid var(--border-dim);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+  }
+  .graph-filter-btn.active {
+    border-color: var(--border-bright);
+    color: var(--circuit-green);
+    background: rgba(0, 255, 102, 0.12);
+  }
+
+  .graph-controls {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .ctrl-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(8, 16, 12, 0.85);
+    border: 1px solid var(--border-dim);
+    color: var(--text-primary);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.85rem;
+    backdrop-filter: blur(4px);
+  }
+  .ctrl-btn:hover {
+    border-color: var(--border-bright);
+    color: var(--circuit-green);
+  }
+
+  .node-inspector {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(8, 16, 12, 0.95);
+    border-top: 1px solid var(--border-bright);
+    padding: 0.85rem 1rem;
+    backdrop-filter: blur(8px);
+    transform: translateY(100%);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .node-inspector.open {
+    transform: translateY(0);
+  }
+  .inspector-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .inspector-title {
+    font-family: var(--font-cyber);
+    font-size: 0.88rem;
+    color: #fff;
+  }
+  .inspector-badge {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--circuit-green);
+    border: 1px solid var(--border-dim);
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+  }
+  .inspector-body {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+  .inspector-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.3rem;
+  }
+  .inspect-btn {
+    background: rgba(0, 255, 102, 0.15);
+    border: 1px solid var(--border-bright);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .inspect-btn:hover {
+    background: var(--circuit-green);
+    color: #000;
+  }
+
+  /* ------------------- PANE 3: LIVE & HISTORIC GRID TELEMETRY ------------------- */
+  #grid-panel {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .grid-cockpit-content {
+    flex: 1;
+    padding: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    overflow-y: auto;
+  }
+
+  /* Top Metric Cards */
+  .grid-kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.6rem;
+  }
+  .kpi-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+    border-radius: 8px;
+    padding: 0.65rem 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 3px; height: 100%;
+    background: var(--circuit-green);
+    box-shadow: 0 0 8px var(--circuit-green);
+  }
+  .kpi-label {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+  .kpi-value {
+    font-family: var(--font-cyber);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  .kpi-sub {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--circuit-green);
+  }
+
+  /* Fuel Mix Segment Bar */
+  .fuel-mix-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+    border-radius: 8px;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .fuel-mix-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .fuel-mix-title {
+    font-family: var(--font-cyber);
+    font-size: 0.76rem;
+    color: #fff;
+  }
+  .fuel-bar-track {
+    width: 100%;
+    height: 14px;
+    background: #040806;
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    border: 1px solid var(--border-dim);
+  }
+  .fuel-segment {
+    height: 100%;
+    transition: width 0.4s ease;
+    position: relative;
+  }
+  .fuel-segment:hover {
+    filter: brightness(1.25);
+  }
+  .fuel-chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+  .fuel-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-dim);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+  .fuel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+  }
+
+  /* Historic Generation Canvas Box */
+  .history-chart-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+    border-radius: 8px;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    position: relative;
+  }
+  .chart-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .chart-filter-toggles {
+    display: flex;
+    gap: 0.35rem;
+  }
+  .c-toggle {
+    background: rgba(0, 255, 102, 0.05);
+    border: 1px solid var(--border-dim);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    padding: 0.2rem 0.45rem;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  .c-toggle.active {
+    border-color: var(--border-bright);
+    color: #fff;
+    background: rgba(0, 255, 102, 0.15);
+  }
+
+  .chart-canvas-wrap {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    background: #040806;
+    border: 1px solid var(--border-dim);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  canvas#gridHistoryCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    cursor: crosshair;
+  }
+
+  /* Scrubber Tooltip */
+  .chart-scrubber-tooltip {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(6, 14, 10, 0.94);
+    border: 1px solid var(--border-bright);
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    line-height: 1.4;
+    color: #fff;
+    pointer-events: none;
+    box-shadow: 0 0 14px rgba(0, 255, 102, 0.2);
+    z-index: 10;
+    display: none;
+  }
+
+  /* Grid Actions */
+  .grid-action-bar {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .grid-act-btn {
+    flex: 1;
+    background: rgba(0, 255, 102, 0.08);
+    border: 1px solid var(--border-dim);
+    color: var(--circuit-green);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .grid-act-btn:hover {
+    background: rgba(0, 255, 102, 0.2);
+    border-color: var(--border-bright);
+    color: #fff;
+  }
+
+  /* ------------------- PANE 4: TRENDS, NEWS & CAREER LABS ------------------- */
+  #side-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+
+  .sub-panel {
+    flex: 1;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-dim);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+  .sub-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--border-bright), transparent);
+    opacity: 0.5;
+  }
+
+  .scroll-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .trend-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+    border-radius: 6px;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    transition: all 0.2s;
+  }
+  .trend-item:hover {
+    border-color: rgba(0, 255, 102, 0.5);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 255, 102, 0.08);
+  }
+  .trend-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--text-muted);
+  }
+  .trend-tag {
+    color: var(--circuit-green);
+    background: rgba(0, 255, 102, 0.08);
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+  }
+  .trend-title {
+    font-family: var(--font-cyber);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.3;
+  }
+  .trend-desc {
+    font-size: 0.74rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+  .trend-action-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.2rem;
+  }
+  .trend-btn {
+    background: transparent;
+    border: 1px solid var(--border-dim);
+    color: var(--circuit-green);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .trend-btn:hover {
+    background: rgba(0, 255, 102, 0.15);
+    border-color: var(--border-bright);
+    color: #fff;
+  }
+
+  /* Engineering Practice & Career Development */
+  .calc-box {
+    background: #08110c;
+    border: 1px solid var(--border-dim);
+    border-radius: 6px;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .calc-header {
+    font-family: var(--font-cyber);
+    font-size: 0.76rem;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .calc-formula {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--circuit-green);
+    background: rgba(0, 255, 102, 0.06);
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+  }
+  .calc-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+  .calc-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .calc-field label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+  }
+  .calc-field input {
+    background: #040806;
+    border: 1px solid var(--border-dim);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    padding: 0.35rem 0.5rem;
+    border-radius: 4px;
+    outline: none;
+  }
+  .calc-field input:focus {
+    border-color: var(--border-bright);
+  }
+  .calc-result-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 255, 102, 0.08);
+    border: 1px dashed rgba(0, 255, 102, 0.3);
+    border-radius: 4px;
+    padding: 0.4rem 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+  }
+  .calc-val {
+    font-weight: 700;
+    color: var(--circuit-green);
+  }
+
+  /* P.Eng Competency Tracker Matrix */
+  .competency-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+    border-radius: 6px;
+    padding: 0.6rem 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .comp-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .comp-title {
+    font-family: var(--font-cyber);
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  .comp-status {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+  }
+  .comp-status.done {
+    background: rgba(0, 255, 102, 0.15);
+    color: var(--circuit-green);
+    border: 1px solid rgba(0, 255, 102, 0.3);
+  }
+  .comp-status.pending {
+    background: rgba(255, 180, 0, 0.12);
+    color: #ffb400;
+    border: 1px solid rgba(255, 180, 0, 0.3);
+  }
+  .comp-bar {
+    width: 100%;
+    height: 4px;
+    background: #040806;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .comp-fill {
+    height: 100%;
+    background: var(--circuit-green);
+    box-shadow: 0 0 6px var(--circuit-green);
+    transition: width 0.3s;
+  }
+  .comp-desc {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+  }
+
+  /* ------------------- A2UI COMPONENT STYLES ------------------- */
+  .a2card {
+    border: 1px solid var(--border-bright);
+    border-radius: 8px;
+    padding: 0.85rem;
+    background: linear-gradient(135deg, rgba(17, 29, 23, 0.95) 0%, rgba(9, 16, 12, 0.95) 100%);
+    box-shadow: 0 0 16px rgba(0, 255, 102, 0.15), inset 0 0 10px rgba(0, 255, 102, 0.05);
+    max-width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  .a2card::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 24px; height: 24px;
+    background: linear-gradient(135deg, transparent 50%, rgba(0, 255, 102, 0.3) 50%);
+  }
+  .a2card + .a2card, .a2col > .a2card { margin-top: 0.6rem; }
+  .a2col { display: flex; flex-direction: column; gap: 0.45rem; }
+  .a2row { display: flex; flex-direction: row; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
+  .a2row.between { justify-content: space-between; }
+  .a2text { margin: 0; line-height: 1.4; color: var(--text-primary); }
+  .a2text.a2-h1 { font-family: var(--font-cyber); font-size: 1.2rem; font-weight: 700; color: #fff; text-shadow: 0 0 8px var(--circuit-glow); }
+  .a2text.a2-h2 { font-family: var(--font-cyber); font-size: 1.05rem; font-weight: 700; color: var(--circuit-green); }
+  .a2text.a2-h3 { font-family: var(--font-cyber); font-size: 0.95rem; font-weight: 600; color: #fff; }
+  .a2text.a2-h4 { font-family: var(--font-cyber); font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); }
+  .a2text.a2-caption { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); }
+  .a2divider { border: none; border-top: 1px solid var(--border-dim); margin: 0.4rem 0; width: 100%; }
+  .a2img { max-width: 100%; border-radius: 6px; display: block; border: 1px solid var(--border-dim); }
+  .material-symbols-outlined { font-family: 'Material Symbols Outlined'; font-size: 1.15rem; line-height: 1; vertical-align: middle; color: var(--circuit-green); }
+
+  /* Responsive / Collapsed screen */
+  @media (max-width: 1200px) {
+    .workspace-container {
+      grid-template-columns: 360px 1fr 360px;
+    }
+  }
+  @media (max-width: 980px) {
+    .workspace-container {
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+    .panel {
+      min-height: 420px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header / Omnitrix HUD -->
+<header>
+  <div class="omnitrix-brand">
+    <div class="omni-badge active" id="omniCore" title="Upgrade Galvanic Mechamorph Core"></div>
+    <div class="brand-text">
+      <h1>UPGRADE <span>// MECHAMORPH</span></h1>
+      <p>GRID INNOVATION COMPANION &amp; ENGINEERING KNOWLEDGE SYSTEM</p>
+    </div>
+  </div>
+
+  <!-- Center View Mode Tabs (for responsive or focused decks) -->
+  <div class="view-tabs">
+    <button class="tab-btn active" data-view="all">
+      <span class="material-symbols-outlined" style="font-size:0.95rem;">dashboard</span> DECK
+    </button>
+    <button class="tab-btn" data-view="grid">
+      <span class="material-symbols-outlined" style="font-size:0.95rem;">electric_meter</span> GRID STATUS
+    </button>
+    <button class="tab-btn" data-view="graph">
+      <span class="material-symbols-outlined" style="font-size:0.95rem;">hub</span> NEURAL NET
+    </button>
+    <button class="tab-btn" data-view="chat">
+      <span class="material-symbols-outlined" style="font-size:0.95rem;">terminal</span> AGENT
+    </button>
+    <button class="tab-btn" data-view="trends">
+      <span class="material-symbols-outlined" style="font-size:0.95rem;">trending_up</span> TRENDS
+    </button>
+    <button class="tab-btn" data-view="career">
+      <span class="material-symbols-outlined" style="font-size:0.95rem;">school</span> P.ENG LABS
+    </button>
+  </div>
+
+  <!-- System Readouts -->
+  <div class="sys-readouts">
+    <div class="readout-pill">
+      <div class="status-dot"></div>
+      <span id="gridPillText">IESO: <strong>ONLINE</strong></span>
+    </div>
+    <div class="readout-pill">
+      <span class="material-symbols-outlined" style="font-size:0.85rem;">memory</span>
+      <span>RUNTIME: <strong>US-EAST1</strong></span>
+    </div>
+  </div>
+</header>
+
+<!-- Main Multi-Pane Workspace -->
+<div class="workspace-container" id="workspace">
+
+  <!-- ================= PANE 1: UPGRADE CHAT ================= -->
+  <section class="panel" id="chat-panel" data-panel-type="chat">
+    <div class="panel-header">
+      <div class="panel-title">
+        <span class="indicator"></span>
+        <span>UPGRADE // AGENT TERMINAL</span>
+      </div>
+      <div class="panel-actions">
+        <button class="p-btn" id="clearChatBtn" title="Clear Chat Log">CLEAR</button>
+      </div>
+    </div>
+
+    <div id="log"></div>
+
+    <!-- Quick action prompts -->
+    <div class="quick-chips">
+      <button class="chip" data-prompt="Look up current Ontario IESO electricity demand and supply forecast">⚡ IESO Real-Time Grid</button>
+      <button class="chip" data-prompt="Analyze the hourly dispatch curve from the IESO grid today and identify the peak ramp rate period">📈 Analyze Ramp Rate</button>
+      <button class="chip" data-prompt="Run a DER hosting capacity and voltage rise study for a 500 kW solar PV on a 13.8 kV distribution feeder">📊 DER Hosting Calc</button>
+      <button class="chip" data-prompt="Explain IEEE 2800 and IEEE 1547 requirements for Inverter-Based Resources (IBRs)">🔌 IEEE 1547 / 2800</button>
+    </div>
+
+    <form id="form">
+      <input id="input" placeholder="Transmit instructions to Upgrade..." autocomplete="off" autofocus>
+      <button type="submit" class="send-btn">
+        <span class="material-symbols-outlined" style="font-size:1rem;">bolt</span> UPGRADE
+      </button>
+    </form>
+  </section>
+
+  <!-- ================= PANE 2: LIVE & HISTORIC GRID TELEMETRY ================= -->
+  <section class="panel" id="grid-panel" data-panel-type="grid">
+    <div class="panel-header">
+      <div class="panel-title">
+        <span class="indicator"></span>
+        <span>ONTARIO IESO BULK GRID COCKPIT</span>
+      </div>
+      <div class="panel-actions">
+        <span id="gridTimeTag" class="p-btn" style="border:none; color:var(--text-muted);">SYNCING...</span>
+        <button class="p-btn" id="refreshGridBtn">REFRESH</button>
+      </div>
+    </div>
+
+    <div class="grid-cockpit-content">
+      <!-- KPI Row -->
+      <div class="grid-kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-label">TOTAL GENERATION</div>
+          <div class="kpi-value" id="kpiTotalMW">-- MW</div>
+          <div class="kpi-sub" id="kpiState">NORMAL OPERATING</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">CLEAN ENERGY SHARE</div>
+          <div class="kpi-value" id="kpiCleanPct" style="color:var(--circuit-green);">--%</div>
+          <div class="kpi-sub">ZERO EMISSION</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">CARBON INTENSITY</div>
+          <div class="kpi-value" id="kpiCo2">-- g</div>
+          <div class="kpi-sub">CO₂ / kWh</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">EST. HOEP / MCP</div>
+          <div class="kpi-value" id="kpiPrice">$--</div>
+          <div class="kpi-sub">CAD / MWh</div>
+        </div>
+      </div>
+
+      <!-- Live Generation Fuel Mix Segment Bar -->
+      <div class="fuel-mix-box">
+        <div class="fuel-mix-header">
+          <span class="fuel-mix-title">REAL-TIME GENERATION FUEL MIX</span>
+          <span id="fuelTotalSubtitle" style="font-family:var(--font-mono); font-size:0.7rem; color:var(--text-muted);">-- MW Total</span>
+        </div>
+        <div class="fuel-bar-track" id="fuelBarTrack">
+          <div class="fuel-segment" id="segNuclear" style="background:var(--fuel-nuclear); width:44%;" title="Nuclear"></div>
+          <div class="fuel-segment" id="segGas" style="background:var(--fuel-gas); width:31%;" title="Gas"></div>
+          <div class="fuel-segment" id="segHydro" style="background:var(--fuel-hydro); width:19%;" title="Hydro"></div>
+          <div class="fuel-segment" id="segWind" style="background:var(--fuel-wind); width:5%;" title="Wind"></div>
+          <div class="fuel-segment" id="segSolar" style="background:var(--fuel-solar); width:1%;" title="Solar"></div>
+        </div>
+        <div class="fuel-chips-row" id="fuelChipsRow">
+          <div class="fuel-chip"><span class="fuel-dot" style="background:var(--fuel-nuclear);"></span> Nuclear: <strong id="lblNuclear">-- MW</strong></div>
+          <div class="fuel-chip"><span class="fuel-dot" style="background:var(--fuel-gas);"></span> Gas: <strong id="lblGas">-- MW</strong></div>
+          <div class="fuel-chip"><span class="fuel-dot" style="background:var(--fuel-hydro);"></span> Hydro: <strong id="lblHydro">-- MW</strong></div>
+          <div class="fuel-chip"><span class="fuel-dot" style="background:var(--fuel-wind);"></span> Wind: <strong id="lblWind">-- MW</strong></div>
+          <div class="fuel-chip"><span class="fuel-dot" style="background:var(--fuel-solar);"></span> Solar: <strong id="lblSolar">-- MW</strong></div>
+        </div>
+      </div>
+
+      <!-- Historic 24-Hour Generation Curve -->
+      <div class="history-chart-box">
+        <div class="chart-header-row">
+          <span class="fuel-mix-title">24-HOUR HISTORIC DISPATCH CURVE (IESO HOURLY)</span>
+          <div class="chart-filter-toggles">
+            <button class="c-toggle active" data-fuel="all">ALL</button>
+            <button class="c-toggle" data-fuel="nuclear">NUC</button>
+            <button class="c-toggle" data-fuel="gas">GAS</button>
+            <button class="c-toggle" data-fuel="hydro">HYD</button>
+            <button class="c-toggle" data-fuel="wind">WND</button>
+            <button class="c-toggle" data-fuel="solar">SOL</button>
+          </div>
+        </div>
+
+        <div class="chart-canvas-wrap" id="chartCanvasWrap">
+          <canvas id="gridHistoryCanvas"></canvas>
+          <div class="chart-scrubber-tooltip" id="chartTooltip">Hover hour...</div>
+        </div>
+      </div>
+
+      <!-- Action triggers to send to Upgrade agent -->
+      <div class="grid-action-bar">
+        <button class="grid-act-btn" id="btnAnalyzeDispatch">⚡ Ask Upgrade to Analyze Today's Dispatch</button>
+        <button class="grid-act-btn" id="btnSimulateBess">🔋 Model 500MW BESS Peak Shaving</button>
+        <button class="grid-act-btn" id="btnGasDecarb">🌱 Assess Gas Peaker Decarbonization</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PANE 3: NEURAL KNOWLEDGE GRAPH (OBSIDIAN STYLE) ================= -->
+  <section class="panel" id="graph-panel" data-panel-type="graph">
+    <div class="panel-header">
+      <div class="panel-title">
+        <span class="indicator"></span>
+        <span>NEURAL KNOWLEDGE GRAPH</span>
+      </div>
+      <div class="panel-actions">
+        <button class="p-btn" id="resetPhysicsBtn">STABILIZE</button>
+        <button class="p-btn" id="addNodeBtn">+ NODE</button>
+      </div>
+    </div>
+
+    <div class="graph-canvas-container" id="graphContainer">
+      <div class="graph-hud-top">
+        <div class="graph-tag-filters">
+          <button class="graph-filter-btn active" data-filter="all">ALL NODES</button>
+          <button class="graph-filter-btn" data-filter="tech">GRID TECH</button>
+          <button class="graph-filter-btn" data-filter="standards">STANDARDS</button>
+          <button class="graph-filter-btn" data-filter="career">P.ENG CAREER</button>
+        </div>
+      </div>
+
+      <div class="graph-controls">
+        <button class="ctrl-btn" id="zoomInBtn" title="Zoom In">+</button>
+        <button class="ctrl-btn" id="zoomOutBtn" title="Zoom Out">-</button>
+        <button class="ctrl-btn" id="zoomResetBtn" title="Fit to Screen">⛶</button>
+      </div>
+
+      <canvas id="netGraph"></canvas>
+
+      <div class="node-inspector" id="nodeInspector">
+        <div class="inspector-header">
+          <div class="inspector-title" id="inspTitle">Node Title</div>
+          <div class="inspector-badge" id="inspCategory">CATEGORY</div>
+        </div>
+        <div class="inspector-body" id="inspDesc">Node description will appear here...</div>
+        <div class="inspector-actions">
+          <button class="inspect-btn" id="inspAskBtn">
+            <span class="material-symbols-outlined" style="font-size:0.85rem; vertical-align:middle;">psychology</span> Consult Upgrade Agent
+          </button>
+          <button class="p-btn" id="inspCloseBtn">DISMISS</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PANE 4: TRENDS, NEWS & CAREER LABS ================= -->
+  <section class="panel" id="side-panel">
+
+    <!-- SUB-PANE 4A: GRID INNOVATION TRENDS & RESEARCH -->
+    <div class="sub-panel" id="trends-subpanel" data-panel-type="trends">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span class="indicator"></span>
+          <span>GRID TRENDS &amp; RESEARCH RADAR</span>
+        </div>
+        <div class="panel-actions">
+          <span class="trend-tag">LIVE INTEL</span>
+        </div>
+      </div>
+
+      <div class="scroll-content" id="trendsList">
+        <article class="trend-item">
+          <div class="trend-meta">
+            <span class="trend-tag">FERC &amp; NERC</span>
+            <span>OCT 2026</span>
+          </div>
+          <div class="trend-title">FERC Order 2222 Implementation in Wholesale Markets</div>
+          <div class="trend-desc">Aggregated Distributed Energy Resources (DERs) participating in capacity, energy, and ancillary services markets. Interconnection study queue reforms.</div>
+          <div class="trend-action-row">
+            <button class="trend-btn" data-prompt="Analyze how FERC Order 2222 impacts distribution utility interconnection studies and hosting capacity limits.">SYNTHESIZE WITH AGENT</button>
+          </div>
+        </article>
+
+        <article class="trend-item">
+          <div class="trend-meta">
+            <span class="trend-tag">INVERTER DYNAMICS</span>
+            <span>IEEE PES</span>
+          </div>
+          <div class="trend-title">Grid-Forming (GFM) Inverters for Weak Grids &amp; BESS</div>
+          <div class="trend-desc">Transitioning from Grid-Following (GFL) phase-locked loops to virtual synchronous machines for synthetic inertia and black-start capabilities.</div>
+          <div class="trend-action-row">
+            <button class="trend-btn" data-prompt="Provide a technical comparison between Grid-Forming (GFM) and Grid-Following (GFL) inverters for utility-scale battery storage.">SYNTHESIZE WITH AGENT</button>
+          </div>
+        </article>
+
+        <article class="trend-item">
+          <div class="trend-meta">
+            <span class="trend-tag">ONTARIO IESO</span>
+            <span>REGIONAL INTEL</span>
+          </div>
+          <div class="trend-title">IESO Market Renewal Program (MRP) &amp; T-D Coordination</div>
+          <div class="trend-desc">Single-schedule market transition, day-ahead calculation engines, and enhanced local distribution company (LDC) DER observability protocols.</div>
+          <div class="trend-action-row">
+            <button class="trend-btn" data-prompt="What are the key operational changes under the Ontario IESO Market Renewal Program for local distribution companies?">SYNTHESIZE WITH AGENT</button>
+          </div>
+        </article>
+
+        <article class="trend-item">
+          <div class="trend-meta">
+            <span class="trend-tag">SUBSTATION AI</span>
+            <span>SCADA &amp; IED</span>
+          </div>
+          <div class="trend-title">IEC 61850 Process Bus &amp; Digital Twin Substation Automation</div>
+          <div class="trend-desc">GOOSE messaging over optical fiber replacing copper control wiring, paired with real-time dynamic thermal rating for power transformers.</div>
+          <div class="trend-action-row">
+            <button class="trend-btn" data-prompt="Explain the architecture of IEC 61850 Sampled Values and GOOSE messaging in digital substations.">SYNTHESIZE WITH AGENT</button>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- SUB-PANE 4B: PERSONAL DEVELOPMENT & PRACTICE CALCULATOR -->
+    <div class="sub-panel" id="career-subpanel" data-panel-type="career">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span class="indicator"></span>
+          <span>P.ENG DEVELOPMENT &amp; LABS</span>
+        </div>
+        <div class="panel-actions">
+          <button class="p-btn" id="evalWorkBtn">EVALUATE LAB</button>
+        </div>
+      </div>
+
+      <div class="scroll-content">
+        <div class="calc-box">
+          <div class="calc-header">
+            <span>DER VOLTAGE RISE ESTIMATOR</span>
+            <span class="calc-formula">ΔV ≈ (P·R + Q·X) / V</span>
+          </div>
+          <div class="calc-row">
+            <div class="calc-field">
+              <label>ACTIVE POWER P (kW)</label>
+              <input type="number" id="calcP" value="500" step="50">
+            </div>
+            <div class="calc-field">
+              <label>REACTIVE POWER Q (kVAR)</label>
+              <input type="number" id="calcQ" value="0" step="10">
+            </div>
+          </div>
+          <div class="calc-row">
+            <div class="calc-field">
+              <label>FEEDER R (Ω)</label>
+              <input type="number" id="calcR" value="0.45" step="0.05">
+            </div>
+            <div class="calc-field">
+              <label>FEEDER X (Ω)</label>
+              <input type="number" id="calcX" value="0.65" step="0.05">
+            </div>
+          </div>
+          <div class="calc-row">
+            <div class="calc-field">
+              <label>NOMINAL VOLTAGE V (kV)</label>
+              <input type="number" id="calcV" value="13.8" step="0.1">
+            </div>
+            <div class="calc-field">
+              <label>CALCULATED ΔV</label>
+              <div class="calc-result-box">
+                <span>RISE:</span>
+                <span class="calc-val" id="calcResult">16.3 V (0.12%)</span>
+              </div>
+            </div>
+          </div>
+          <button class="p-btn" style="width:100%; border-color:var(--border-bright); color:#fff;" id="sendCalcToAgent">
+            ⚡ Transmit Study to Upgrade for IEEE 1547 Check
+          </button>
+        </div>
+
+        <div class="competency-item">
+          <div class="comp-title-row">
+            <span class="comp-title">1.1 Regulation, Codes &amp; Standards</span>
+            <span class="comp-status done">COMPLETE</span>
+          </div>
+          <div class="comp-bar"><div class="comp-fill" style="width: 100%;"></div></div>
+          <div class="comp-desc">Demonstrated knowledge of OEB Distribution System Code, CSA C22.3, and IEEE 1547.</div>
+        </div>
+
+        <div class="competency-item">
+          <div class="comp-title-row">
+            <span class="comp-title">1.2 Engineering Design &amp; Calculation</span>
+            <span class="comp-status done">85% LOGGED</span>
+          </div>
+          <div class="comp-bar"><div class="comp-fill" style="width: 85%;"></div></div>
+          <div class="comp-desc">Feeder load flow, thermal ampacity, voltage regulation calculations, and fault studies.</div>
+        </div>
+
+        <div class="competency-item">
+          <div class="comp-title-row">
+            <span class="comp-title">1.3 Testing &amp; Verification</span>
+            <span class="comp-status pending">60% IN PROGRESS</span>
+          </div>
+          <div class="comp-bar"><div class="comp-fill" style="width: 60%; background:#ffb400; box-shadow:0 0 6px #ffb400;"></div></div>
+          <div class="comp-desc">Commissioning tests, anti-islanding trip times, relay logic validation (SEL, GE Multilin).</div>
+        </div>
+
+        <div class="competency-item">
+          <div class="comp-title-row">
+            <span class="comp-title">3.1 Professional Ethics &amp; Public Safety</span>
+            <span class="comp-status done">LOGGED</span>
+          </div>
+          <div class="comp-bar"><div class="comp-fill" style="width: 100%;"></div></div>
+          <div class="comp-desc">Ensuring worker safety (arc flash NFPA 70E) and public grid reliability during DER dispatch.</div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+</div>
+
+<script>
+/* ==========================================================================
+ * 1. UPGRADE CHAT & A2UI ENGINE
+ * ========================================================================== */
+const log = document.getElementById("log");
+const form = document.getElementById("form");
+const input = document.getElementById("input");
+const omniCore = document.getElementById("omniCore");
+
+function el(tag, cls, text) { 
+  const e = document.createElement(tag); 
+  if (cls) e.className = cls; 
+  if (text != null) e.textContent = text; 
+  return e; 
+}
+
+function bubble(who) {
+  const m = el("div", "msg " + who);
+  const sender = el("div", "msg-sender", who === "user" ? "ENGINEER // DIRECT" : "UPGRADE // MECHAMORPH");
+  const b = el("div", "bubble");
+  m.appendChild(sender);
+  m.appendChild(b);
+  log.appendChild(m);
+  log.scrollTop = log.scrollHeight;
+  return b;
+}
+
+function boundStr(v) {
+  if (v == null) return "";
+  if (typeof v === "string") return v;
+  if (typeof v.literalString === "string") return v.literalString;
+  return "";
+}
+
+function childIds(props) {
+  const ids = [];
+  if (props && typeof props.child === "string") ids.push(props.child);
+  const ch = props && props.children;
+  if (ch && Array.isArray(ch.explicitList)) {
+    for (const c of ch.explicitList) if (typeof c === "string") ids.push(c);
+  }
+  return ids;
+}
+
+function iconName(n) { 
+  return String(n || "").replace(/([a-z0-9])([A-Z])/g, "$1_$2").replace(/\s+/g, "_").toLowerCase(); 
+}
+
+function buildNode(id, comps, seen) {
+  if (!id || seen.has(id)) return null;
+  seen.add(id);
+  const spec = comps[id];
+  if (!spec || typeof spec !== "object") return null;
+  const type = Object.keys(spec)[0];
+  const props = spec[type] || {};
+  const kids = () => childIds(props).map(cid => buildNode(cid, comps, seen)).filter(Boolean);
+
+  switch (type) {
+    case "Card": {
+      const d = el("div", "a2card"); 
+      kids().forEach(n => d.appendChild(n)); 
+      return d;
+    }
+    case "Column":
+    case "List": {
+      const horizontal = type === "List" && props.direction === "horizontal";
+      const d = el("div", horizontal ? "a2row" : "a2col"); 
+      kids().forEach(n => d.appendChild(n)); 
+      return d;
+    }
+    case "Row": {
+      const d = el("div", "a2row" + (props.distribution === "spaceBetween" ? " between" : ""));
+      kids().forEach(n => d.appendChild(n)); 
+      return d;
+    }
+    case "Text": {
+      const t = el("div", "a2text");
+      const hint = String(props.usageHint || "body").toLowerCase();
+      if (["h1", "h2", "h3", "h4", "h5", "h6"].includes(hint)) t.classList.add("a2-" + hint);
+      else if (hint === "caption") t.classList.add("a2-caption");
+      t.textContent = boundStr(props.text);
+      return t;
+    }
+    case "Divider":
+      return el("hr", "a2divider");
+    case "Image": {
+      const src = boundStr(props.url || props.src);
+      if (!/^https?:\/\//i.test(src)) return null;
+      const img = el("img", "a2img"); 
+      img.src = src; 
+      img.alt = boundStr(props.alt) || ""; 
+      return img;
+    }
+    case "Icon": {
+      const s = el("span", "material-symbols-outlined"); 
+      s.textContent = iconName(boundStr(props.name) || props.name); 
+      return s;
+    }
+    default:
+      return null;
+  }
+}
+
+function renderSurface(messages, container) {
+  const comps = {};
+  const roots = [];
+  for (const m of messages) {
+    if (m.beginRendering && typeof m.beginRendering.root === "string") roots.push(m.beginRendering.root);
+    const su = m.surfaceUpdate;
+    if (su && Array.isArray(su.components)) {
+      for (const c of su.components) {
+        if (c && c.id && c.component) comps[c.id] = c.component;
+      }
+    }
+  }
+  let rootIds = roots.filter(r => comps[r]);
+  if (rootIds.length === 0) {
+    const referenced = new Set();
+    for (const id in comps) { 
+      const spec = comps[id]; 
+      childIds(spec[Object.keys(spec)[0]] || {}).forEach(c => referenced.add(c)); 
+    }
+    rootIds = Object.keys(comps).filter(id => !referenced.has(id));
+  }
+  let drew = false;
+  for (const rid of rootIds) { 
+    const node = buildNode(rid, comps, new Set()); 
+    if (node) { 
+      container.appendChild(node); 
+      drew = true; 
+    } 
+  }
+  return drew;
+}
+
+function flattenText(messages) {
+  const out = [];
+  for (const m of messages) {
+    const su = m.surfaceUpdate;
+    if (su && Array.isArray(su.components)) {
+      for (const c of su.components) {
+        if (c && c.component && c.component.Text) out.push(boundStr(c.component.Text.text));
+      }
+    }
+  }
+  return out.join("\n").trim();
+}
+
+function renderReply(b, parts) {
+  b.textContent = "";
+  const texts = parts.filter(p => p && (p.kind === "text" || (!p.kind && p.text))).map(p => p.text || "");
+  const a2ui = parts.filter(p => p && p.kind === "a2ui" && p.data).map(p => p.data);
+
+  const textStr = texts.join("\n").trim();
+  if (textStr) b.appendChild(el("div", null, textStr));
+
+  if (a2ui.length) {
+    b.classList.add("rich");
+    if (!renderSurface(a2ui, b)) {
+      b.appendChild(el("div", null, flattenText(a2ui) || "(no card content)"));
+    }
+  }
+  if (!b.childNodes.length) b.textContent = "(no response)";
+  log.scrollTop = log.scrollHeight;
+}
+
+async function sendChatMessage(text) {
+  if (!text) return;
+  bubble("user").textContent = text;
+  const b = bubble("agent"); 
+  b.textContent = "UPGRADING CIRCUITS...";
+  
+  if (omniCore) omniCore.classList.add("active");
+
+  try {
+    const res = await fetch("/chat", { 
+      method: "POST", 
+      headers: { "Content-Type": "application/json" }, 
+      body: JSON.stringify({ message: text }) 
+    });
+    const raw = await res.text();
+    let data;
+    try { 
+      data = JSON.parse(raw); 
+    } catch { 
+      throw new Error(`Server returned non-JSON (HTTP ${res.status}). ${raw.slice(0, 300)}`); 
+    }
+    renderReply(b, data.parts || []);
+  } catch (e) {
+    b.textContent = "Transmission Error: " + e.message;
+  } finally {
+    if (omniCore) omniCore.classList.remove("active");
+  }
+}
+
+form.addEventListener("submit", (ev) => {
+  ev.preventDefault();
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = "";
+  sendChatMessage(text);
+});
+
+document.querySelectorAll(".chip").forEach(ch => {
+  ch.addEventListener("click", () => {
+    const p = ch.getAttribute("data-prompt");
+    sendChatMessage(p);
+  });
+});
+
+document.getElementById("clearChatBtn").addEventListener("click", () => {
+  log.innerHTML = "";
+  initialGreeting();
+});
+
+function initialGreeting() {
+  const b = bubble("agent");
+  b.innerHTML = `<strong>Upgrade Protocol Online.</strong><br>Galvanic Mechamorph companion ready to interface with live grid telemetry, network knowledge graphs, and P.Eng licensure competency logs.`;
+}
+initialGreeting();
+
+
+/* ==========================================================================
+ * 2. LIVE & HISTORIC IESO GRID TELEMETRY COCKPIT
+ * ========================================================================== */
+let cachedGridHistory = [];
+let activeChartFuelFilter = "all";
+
+async function loadGridTelemetry() {
+  const timeTag = document.getElementById("gridTimeTag");
+  timeTag.textContent = "REFRESHING...";
+
+  try {
+    const res = await fetch("/api/grid/history");
+    const data = await res.json();
+    const live = data.live || {};
+    const history = data.history || [];
+    cachedGridHistory = history;
+
+    // Update KPIs
+    if (live.total_mw) {
+      document.getElementById("kpiTotalMW").textContent = `${Math.round(live.total_mw).toLocaleString()} MW`;
+      document.getElementById("kpiCleanPct").textContent = `${live.clean_pct}%`;
+      document.getElementById("kpiCo2").textContent = `${live.co2_intensity} g`;
+      document.getElementById("kpiPrice").textContent = `$${live.estimated_price_cad.toFixed(2)}`;
+      document.getElementById("fuelTotalSubtitle").textContent = `${Math.round(live.total_mw).toLocaleString()} MW Total Output`;
+      timeTag.textContent = `SYNC: ${live.timestamp ? live.timestamp.split("T")[1] || live.timestamp : "LIVE"}`;
+      document.getElementById("gridPillText").innerHTML = `IESO: <strong>${Math.round(live.total_mw).toLocaleString()} MW</strong>`;
+    }
+
+    // Update Live Fuel Breakdown Bar
+    const fuels = live.fuels || {};
+    const tot = live.total_mw || 1;
+    const nuc = fuels["Nuclear"] || 0;
+    const gas = fuels["Gas"] || 0;
+    const hyd = fuels["Hydro"] || 0;
+    const wnd = fuels["Wind"] || 0;
+    const sol = fuels["Solar"] || 0;
+
+    document.getElementById("segNuclear").style.width = `${(nuc / tot * 100).toFixed(1)}%`;
+    document.getElementById("segGas").style.width = `${(gas / tot * 100).toFixed(1)}%`;
+    document.getElementById("segHydro").style.width = `${(hyd / tot * 100).toFixed(1)}%`;
+    document.getElementById("segWind").style.width = `${(wnd / tot * 100).toFixed(1)}%`;
+    document.getElementById("segSolar").style.width = `${(sol / tot * 100).toFixed(1)}%`;
+
+    document.getElementById("lblNuclear").textContent = `${Math.round(nuc).toLocaleString()} MW (${(nuc/tot*100).toFixed(1)}%)`;
+    document.getElementById("lblGas").textContent = `${Math.round(gas).toLocaleString()} MW (${(gas/tot*100).toFixed(1)}%)`;
+    document.getElementById("lblHydro").textContent = `${Math.round(hyd).toLocaleString()} MW (${(hyd/tot*100).toFixed(1)}%)`;
+    document.getElementById("lblWind").textContent = `${Math.round(wnd).toLocaleString()} MW (${(wnd/tot*100).toFixed(1)}%)`;
+    document.getElementById("lblSolar").textContent = `${Math.round(sol).toLocaleString()} MW (${(sol/tot*100).toFixed(1)}%)`;
+
+    // Render Canvas Chart
+    drawGridHistoryChart();
+  } catch (err) {
+    timeTag.textContent = "SYNC ERROR";
+    console.error("Grid telemetry load error:", err);
+  }
+}
+
+// Interactive Historic Dispatch Canvas Chart
+const chartCanvas = document.getElementById("gridHistoryCanvas");
+const chartCtx = chartCanvas.getContext("2d");
+const chartWrap = document.getElementById("chartCanvasWrap");
+const chartTooltip = document.getElementById("chartTooltip");
+let chartHoverIndex = -1;
+
+function drawGridHistoryChart() {
+  if (!cachedGridHistory || cachedGridHistory.length === 0) return;
+
+  const rect = chartWrap.getBoundingClientRect();
+  chartCanvas.width = rect.width * window.devicePixelRatio;
+  chartCanvas.height = rect.height * window.devicePixelRatio;
+  chartCtx.resetTransform();
+  chartCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+  const w = rect.width;
+  const h = rect.height;
+  const padLeft = 45;
+  const padRight = 15;
+  const padTop = 20;
+  const padBottom = 25;
+  const graphW = w - padLeft - padRight;
+  const graphH = h - padTop - padBottom;
+
+  chartCtx.clearRect(0, 0, w, h);
+
+  // Determine Max MW
+  let maxMW = 20000;
+  for (const item of cachedGridHistory) {
+    if (item.total > maxMW) maxMW = item.total * 1.1;
+  }
+
+  // Draw Grid lines
+  chartCtx.strokeStyle = "rgba(0, 255, 102, 0.08)";
+  chartCtx.lineWidth = 1;
+  chartCtx.beginPath();
+  for (let i = 0; i <= 4; i++) {
+    const yVal = padTop + (graphH / 4) * i;
+    chartCtx.moveTo(padLeft, yVal);
+    chartCtx.lineTo(w - padRight, yVal);
+    
+    // Y-Axis label
+    const mwVal = Math.round(maxMW - (maxMW / 4) * i);
+    chartCtx.fillStyle = "rgba(230, 255, 240, 0.4)";
+    chartCtx.font = "9px 'Share Tech Mono', monospace";
+    chartCtx.textAlign = "right";
+    chartCtx.fillText(`${mwVal} MW`, padLeft - 6, yVal + 3);
+  }
+  chartCtx.stroke();
+
+  // X-Axis hours (1 to 24)
+  const nPoints = cachedGridHistory.length;
+  chartCtx.textAlign = "center";
+  for (let i = 0; i < nPoints; i += 2) {
+    const xVal = padLeft + (i / (nPoints - 1 || 1)) * graphW;
+    const hr = cachedGridHistory[i].hour;
+    chartCtx.fillStyle = "rgba(230, 255, 240, 0.45)";
+    chartCtx.fillText(`${hr}h`, xVal, h - 8);
+  }
+
+  // Helper to draw a line series
+  function drawSeries(key, color, isFill, lineWidth = 2) {
+    chartCtx.beginPath();
+    cachedGridHistory.forEach((pt, idx) => {
+      const x = padLeft + (idx / (nPoints - 1 || 1)) * graphW;
+      const val = pt[key] || 0;
+      const y = padTop + graphH - (val / maxMW) * graphH;
+      if (idx === 0) chartCtx.moveTo(x, y);
+      else chartCtx.lineTo(x, y);
+    });
+
+    if (isFill) {
+      chartCtx.save();
+      const lastX = padLeft + graphW;
+      chartCtx.lineTo(lastX, padTop + graphH);
+      chartCtx.lineTo(padLeft, padTop + graphH);
+      chartCtx.closePath();
+      chartCtx.fillStyle = color.replace(")", ", 0.12)").replace("rgb", "rgba").replace("#00ff66", "rgba(0,255,102,0.12)");
+      chartCtx.fill();
+      chartCtx.restore();
+    }
+
+    chartCtx.strokeStyle = color;
+    chartCtx.lineWidth = lineWidth;
+    chartCtx.stroke();
+  }
+
+  if (activeChartFuelFilter === "all" || activeChartFuelFilter === "nuclear") drawSeries("nuclear", "var(--fuel-nuclear)", false, 1.8);
+  if (activeChartFuelFilter === "all" || activeChartFuelFilter === "hydro") drawSeries("hydro", "var(--fuel-hydro)", false, 1.8);
+  if (activeChartFuelFilter === "all" || activeChartFuelFilter === "gas") drawSeries("gas", "var(--fuel-gas)", false, 1.8);
+  if (activeChartFuelFilter === "all" || activeChartFuelFilter === "wind") drawSeries("wind", "var(--fuel-wind)", false, 1.5);
+  if (activeChartFuelFilter === "all" || activeChartFuelFilter === "solar") drawSeries("solar", "var(--fuel-solar)", false, 1.5);
+  
+  // Total line (bold neon green)
+  if (activeChartFuelFilter === "all") {
+    drawSeries("total", "#ffffff", true, 2.2);
+  }
+
+  // Draw Vertical Scrubber reticle on hover
+  if (chartHoverIndex >= 0 && chartHoverIndex < nPoints) {
+    const scrobX = padLeft + (chartHoverIndex / (nPoints - 1 || 1)) * graphW;
+    chartCtx.beginPath();
+    chartCtx.moveTo(scrobX, padTop);
+    chartCtx.lineTo(scrobX, padTop + graphH);
+    chartCtx.strokeStyle = "rgba(0, 255, 102, 0.85)";
+    chartCtx.lineWidth = 1.5;
+    chartCtx.setLineDash([3, 3]);
+    chartCtx.stroke();
+    chartCtx.setLineDash([]);
+
+    // Highlight dot on total
+    const item = cachedGridHistory[chartHoverIndex];
+    const dotY = padTop + graphH - (item.total / maxMW) * graphH;
+    chartCtx.beginPath();
+    chartCtx.arc(scrobX, dotY, 4, 0, Math.PI * 2);
+    chartCtx.fillStyle = "#00ff66";
+    chartCtx.shadowColor = "#00ff66";
+    chartCtx.shadowBlur = 8;
+    chartCtx.fill();
+    chartCtx.shadowBlur = 0;
+  }
+}
+
+// Chart Scrubber Mouse Interaction
+chartWrap.addEventListener("mousemove", (e) => {
+  if (!cachedGridHistory.length) return;
+  const rect = chartWrap.getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  const padLeft = 45;
+  const graphW = rect.width - 45 - 15;
+
+  const ratio = Math.max(0, Math.min(1, (mouseX - padLeft) / graphW));
+  chartHoverIndex = Math.round(ratio * (cachedGridHistory.length - 1));
+  drawGridHistoryChart();
+
+  const item = cachedGridHistory[chartHoverIndex];
+  if (item) {
+    chartTooltip.style.display = "block";
+    chartTooltip.style.left = `${Math.min(rect.width - 160, Math.max(10, mouseX - 60))}px`;
+    chartTooltip.innerHTML = `
+      <div style="font-weight:700; color:var(--circuit-green); margin-bottom:2px;">HOUR ${item.hour}:00 DISPATCH</div>
+      <div>TOTAL: <strong>${Math.round(item.total).toLocaleString()} MW</strong></div>
+      <div style="color:var(--fuel-nuclear);">NUCLEAR: ${Math.round(item.nuclear).toLocaleString()} MW</div>
+      <div style="color:var(--fuel-gas);">GAS: ${Math.round(item.gas).toLocaleString()} MW</div>
+      <div style="color:var(--fuel-hydro);">HYDRO: ${Math.round(item.hydro).toLocaleString()} MW</div>
+      <div style="color:var(--fuel-wind);">WIND: ${Math.round(item.wind).toLocaleString()} MW</div>
+      <div style="color:var(--fuel-solar);">SOLAR: ${Math.round(item.solar).toLocaleString()} MW</div>
+      <div style="margin-top:3px; color:var(--text-muted); font-size:0.65rem;">CLEAN: ${item.clean_pct}% | CO₂: ${item.co2}g</div>
+    `;
+  }
+});
+
+chartWrap.addEventListener("mouseleave", () => {
+  chartHoverIndex = -1;
+  chartTooltip.style.display = "none";
+  drawGridHistoryChart();
+});
+
+chartWrap.addEventListener("click", () => {
+  if (chartHoverIndex >= 0 && cachedGridHistory[chartHoverIndex]) {
+    const item = cachedGridHistory[chartHoverIndex];
+    sendChatMessage(`Upgrade, inspect Ontario grid dispatch for Hour ${item.hour}:00 today: Total ${item.total} MW, Nuclear ${item.nuclear} MW, Gas ${item.gas} MW, Hydro ${item.hydro} MW, Wind ${item.wind} MW, Solar ${item.solar} MW. Analyze generator flexibility and emissions.`);
+  }
+});
+
+// Chart Fuel Filter Buttons
+document.querySelectorAll(".c-toggle").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".c-toggle").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    activeChartFuelFilter = btn.getAttribute("data-fuel");
+    drawGridHistoryChart();
+  });
+});
+
+document.getElementById("refreshGridBtn").addEventListener("click", loadGridTelemetry);
+
+// Grid Actions
+document.getElementById("btnAnalyzeDispatch").addEventListener("click", () => {
+  sendChatMessage("Upgrade, provide a comprehensive analysis of today's 24-hour IESO bulk grid dispatch curve, identifying peak morning ramp rates, renewable contribution, and gas peaker activation.");
+});
+
+document.getElementById("btnSimulateBess").addEventListener("click", () => {
+  sendChatMessage("Upgrade, simulate adding a 500 MW / 2000 MWh 4-hour Grid-Forming Battery Energy Storage System (BESS) to Ontario's bulk grid. How much gas peaker output could be displaced during the morning peak?");
+});
+
+document.getElementById("btnGasDecarb").addEventListener("click", () => {
+  sendChatMessage("Upgrade, what are the primary regulatory and engineering pathways to decarbonize Ontario's natural gas peakers while preserving resource adequacy under the IESO Market Renewal Program?");
+});
+
+loadGridTelemetry();
+setInterval(loadGridTelemetry, 60000);
+
+
+/* ==========================================================================
+ * 3. INTERACTIVE OBSIDIAN-STYLE KNOWLEDGE NEURAL NETWORK
+ * ========================================================================== */
+const canvas = document.getElementById("netGraph");
+const ctx = canvas.getContext("2d");
+const container = document.getElementById("graphContainer");
+
+const graphData = {
+  nodes: [
+    { id: "der", label: "DER Interconnection", category: "tech", size: 14, desc: "Integration of distributed solar, wind, and storage onto medium-voltage distribution systems under IEEE 1547.", x: 0, y: 0 },
+    { id: "gfm", label: "Grid-Forming Inverters", category: "tech", size: 12, desc: "Voltage-source inverters providing virtual inertia, damping, and islanded voltage reference for low-inertia grids.", x: 0, y: 0 },
+    { id: "bess", label: "Battery Energy Storage (BESS)", category: "tech", size: 13, desc: "Four-quadrant energy storage systems providing frequency response, peak shaving, and voltage support.", x: 0, y: 0 },
+    { id: "microgrids", label: "Microgrid Islanding", category: "tech", size: 11, desc: "Seamless intentional islanding, black start restoration, and point of common coupling (PCC) synchronization.", x: 0, y: 0 },
+    { id: "scada", label: "IEC 61850 & SCADA", category: "tech", size: 10, desc: "Substation automation, GOOSE messaging, DNP3 protocol, and synchrophasor PMUs for real-time monitoring.", x: 0, y: 0 },
+    { id: "ieee1547", label: "IEEE 1547-2018", category: "standards", size: 14, desc: "Standard for Interconnection and Interoperability of Distributed Energy Resources with Associated Electric Power Systems Interfaces.", x: 0, y: 0 },
+    { id: "ieee2800", label: "IEEE 2800-2022", category: "standards", size: 12, desc: "Standard for Interconnection of Inverter-Based Resources (IBRs) Interconnecting with Associated Transmission Systems.", x: 0, y: 0 },
+    { id: "ieso_mrp", label: "IESO Market Renewal", category: "standards", size: 13, desc: "Ontario wholesale electricity market modernization: Day-Ahead Market, Real-Time Market, Locational Marginal Pricing (LMP).", x: 0, y: 0 },
+    { id: "ferc2222", label: "FERC Order 2222", category: "standards", size: 11, desc: "Enables distributed energy resource aggregators to participate directly in regional organized wholesale markets.", x: 0, y: 0 },
+    { id: "nerc_cip", label: "NERC CIP Cyber", category: "standards", size: 9, desc: "Critical Infrastructure Protection standards for bulk electric system cyber security and electronic security perimeters.", x: 0, y: 0 },
+    { id: "peng_codes", label: "P.Eng 1.1 Codes & Regs", category: "career", size: 12, desc: "PEO Competency 1.1: Application of regulations, codes, safety standards, and environmental bylaws.", x: 0, y: 0 },
+    { id: "peng_design", label: "P.Eng 1.2 Design & Analysis", category: "career", size: 13, desc: "PEO Competency 1.2: Feeder capacity calculations, fault current analysis, load flow, and thermal limits.", x: 0, y: 0 },
+    { id: "peng_testing", label: "P.Eng 1.3 Commissioning", category: "career", size: 11, desc: "PEO Competency 1.3: Verification of anti-islanding trip times, relay pickup curves, and power quality harmonics.", x: 0, y: 0 },
+    { id: "peng_ethics", label: "P.Eng 3.1 Ethics & Safety", category: "career", size: 12, desc: "PEO Competency 3.1: Professional practice, public safety duty, conflict of interest, and sustainable engineering.", x: 0, y: 0 },
+  ],
+  links: [
+    { source: "der", target: "ieee1547" },
+    { source: "der", target: "bess" },
+    { source: "der", target: "peng_design" },
+    { source: "gfm", target: "bess" },
+    { source: "gfm", target: "ieee2800" },
+    { source: "gfm", target: "microgrids" },
+    { source: "bess", target: "ieso_mrp" },
+    { source: "bess", target: "ferc2222" },
+    { source: "microgrids", target: "scada" },
+    { source: "scada", target: "nerc_cip" },
+    { source: "ieee1547", target: "peng_codes" },
+    { source: "ieee1547", target: "peng_testing" },
+    { source: "ieee2800", target: "peng_codes" },
+    { source: "ieso_mrp", target: "peng_codes" },
+    { source: "peng_design", target: "peng_testing" },
+    { source: "peng_testing", target: "peng_ethics" },
+    { source: "peng_codes", target: "peng_ethics" },
+  ]
+};
+
+let nodes = [];
+let links = [];
+let transform = { x: 0, y: 0, k: 1 };
+let isDragging = false;
+let dragNode = null;
+let hoverNode = null;
+let lastMouse = { x: 0, y: 0 };
+let currentFilter = "all";
+
+function initGraph() {
+  const rect = container.getBoundingClientRect();
+  canvas.width = rect.width * window.devicePixelRatio;
+  canvas.height = rect.height * window.devicePixelRatio;
+  ctx.resetTransform();
+  ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+  const cx = rect.width / 2;
+  const cy = rect.height / 2;
+  transform.x = cx;
+  transform.y = cy;
+
+  nodes = graphData.nodes.map((n, i) => {
+    const angle = (i / graphData.nodes.length) * Math.PI * 2;
+    const radius = 95 + (i % 3) * 40;
+    return {
+      ...n,
+      x: Math.cos(angle) * radius,
+      y: Math.sin(angle) * radius,
+      vx: 0,
+      vy: 0
+    };
+  });
+
+  links = graphData.links.map(l => ({
+    source: nodes.find(n => n.id === l.source),
+    target: nodes.find(n => n.id === l.target)
+  })).filter(l => l.source && l.target);
+}
+
+function tickForces() {
+  const kRepel = 2400;
+  const kAttract = 0.045;
+  const damping = 0.88;
+
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const a = nodes[i];
+      const b = nodes[j];
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const dist = Math.hypot(dx, dy) || 1;
+      const force = kRepel / (dist * dist);
+      const fx = (dx / dist) * force;
+      const fy = (dy / dist) * force;
+      a.vx -= fx;
+      a.vy -= fy;
+      b.vx += fx;
+      b.vy += fy;
+    }
+  }
+
+  for (const l of links) {
+    const dx = l.target.x - l.source.x;
+    const dy = l.target.y - l.source.y;
+    const dist = Math.hypot(dx, dy) || 1;
+    const targetDist = 90;
+    const force = (dist - targetDist) * kAttract;
+    const fx = (dx / dist) * force;
+    const fy = (dy / dist) * force;
+    l.source.vx += fx;
+    l.source.vy += fy;
+    l.target.vx -= fx;
+    l.target.vy -= fy;
+  }
+
+  for (const n of nodes) {
+    n.vx -= n.x * 0.005;
+    n.vy -= n.y * 0.005;
+
+    if (n !== dragNode) {
+      n.x += n.vx;
+      n.y += n.vy;
+      n.vx *= damping;
+      n.vy *= damping;
+    }
+  }
+}
+
+function nodeColor(cat, isHighlight) {
+  if (isHighlight) return "#00ff66";
+  switch (cat) {
+    case "tech": return "#00ff88";
+    case "standards": return "#00b4d8";
+    case "career": return "#ffb400";
+    default: return "#ffffff";
+  }
+}
+
+function drawGraph() {
+  const rect = container.getBoundingClientRect();
+  ctx.save();
+  ctx.clearRect(0, 0, rect.width, rect.height);
+
+  ctx.translate(transform.x, transform.y);
+  ctx.scale(transform.k, transform.k);
+
+  for (const l of links) {
+    const isConn = hoverNode && (l.source === hoverNode || l.target === hoverNode);
+    ctx.beginPath();
+    ctx.moveTo(l.source.x, l.source.y);
+    ctx.lineTo(l.target.x, l.target.y);
+    ctx.strokeStyle = isConn ? "rgba(0, 255, 102, 0.85)" : "rgba(0, 255, 102, 0.15)";
+    ctx.lineWidth = isConn ? 2 : 1;
+    ctx.stroke();
+
+    if (isConn) {
+      const midX = (l.source.x + l.target.x) / 2;
+      const midY = (l.source.y + l.target.y) / 2;
+      ctx.beginPath();
+      ctx.arc(midX, midY, 2, 0, Math.PI * 2);
+      ctx.fillStyle = "#fff";
+      ctx.fill();
+    }
+  }
+
+  for (const n of nodes) {
+    const isFilteredOut = currentFilter !== "all" && n.category !== currentFilter;
+    const isHov = n === hoverNode;
+
+    ctx.save();
+    ctx.globalAlpha = isFilteredOut ? 0.25 : 1.0;
+
+    if (isHov) {
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.size + 8, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(0, 255, 102, 0.2)";
+      ctx.fill();
+    }
+
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.size, 0, Math.PI * 2);
+    ctx.fillStyle = nodeColor(n.category, isHov);
+    ctx.shadowColor = nodeColor(n.category, true);
+    ctx.shadowBlur = isHov ? 16 : 6;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.size * 0.45, 0, Math.PI * 2);
+    ctx.fillStyle = "#040806";
+    ctx.fill();
+
+    ctx.shadowBlur = 0;
+    ctx.font = isHov ? "bold 11px Orbitron, sans-serif" : "9px 'Share Tech Mono', monospace";
+    ctx.fillStyle = isHov ? "#ffffff" : "rgba(230, 255, 240, 0.8)";
+    ctx.textAlign = "center";
+    ctx.fillText(n.label, n.x, n.y + n.size + 12);
+
+    ctx.restore();
+  }
+
+  ctx.restore();
+}
+
+function animate() {
+  tickForces();
+  drawGraph();
+  requestAnimationFrame(animate);
+}
+
+function getCanvasPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: (e.clientX - rect.left - transform.x) / transform.k,
+    y: (e.clientY - rect.top - transform.y) / transform.k
+  };
+}
+
+function findNodeAt(pos) {
+  for (let i = nodes.length - 1; i >= 0; i--) {
+    const n = nodes[i];
+    const dist = Math.hypot(n.x - pos.x, n.y - pos.y);
+    if (dist <= n.size + 4) return n;
+  }
+  return null;
+}
+
+canvas.addEventListener("mousedown", (e) => {
+  const pos = getCanvasPos(e);
+  const n = findNodeAt(pos);
+  if (n) {
+    dragNode = n;
+  } else {
+    isDragging = true;
+    lastMouse = { x: e.clientX, y: e.clientY };
+  }
+});
+
+window.addEventListener("mousemove", (e) => {
+  const pos = getCanvasPos(e);
+  if (dragNode) {
+    dragNode.x = pos.x;
+    dragNode.y = pos.y;
+    dragNode.vx = 0;
+    dragNode.vy = 0;
+  } else if (isDragging) {
+    transform.x += e.clientX - lastMouse.x;
+    transform.y += e.clientY - lastMouse.y;
+    lastMouse = { x: e.clientX, y: e.clientY };
+  } else {
+    hoverNode = findNodeAt(pos);
+  }
+});
+
+window.addEventListener("mouseup", () => {
+  dragNode = null;
+  isDragging = false;
+});
+
+canvas.addEventListener("wheel", (e) => {
+  e.preventDefault();
+  const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
+  transform.k = Math.max(0.4, Math.min(3.0, transform.k * zoomFactor));
+}, { passive: false });
+
+canvas.addEventListener("click", (e) => {
+  const pos = getCanvasPos(e);
+  const n = findNodeAt(pos);
+  if (n) {
+    openInspector(n);
+  }
+});
+
+const nodeInspector = document.getElementById("nodeInspector");
+const inspTitle = document.getElementById("inspTitle");
+const inspCategory = document.getElementById("inspCategory");
+const inspDesc = document.getElementById("inspDesc");
+const inspAskBtn = document.getElementById("inspAskBtn");
+let activeInspectNode = null;
+
+function openInspector(node) {
+  activeInspectNode = node;
+  inspTitle.textContent = node.label;
+  inspCategory.textContent = node.category.toUpperCase();
+  inspDesc.textContent = node.desc;
+  nodeInspector.classList.add("open");
+}
+
+document.getElementById("inspCloseBtn").addEventListener("click", () => {
+  nodeInspector.classList.remove("open");
+});
+
+inspAskBtn.addEventListener("click", () => {
+  if (activeInspectNode) {
+    sendChatMessage(`Upgrade, explain the technical fundamentals, practical utility applications, and IEEE standards regarding "${activeInspectNode.label}": ${activeInspectNode.desc}`);
+    nodeInspector.classList.remove("open");
+  }
+});
+
+document.getElementById("zoomInBtn").addEventListener("click", () => transform.k = Math.min(3.0, transform.k * 1.25));
+document.getElementById("zoomOutBtn").addEventListener("click", () => transform.k = Math.max(0.4, transform.k * 0.8));
+document.getElementById("zoomResetBtn").addEventListener("click", () => {
+  const rect = container.getBoundingClientRect();
+  transform.x = rect.width / 2;
+  transform.y = rect.height / 2;
+  transform.k = 1.0;
+});
+document.getElementById("resetPhysicsBtn").addEventListener("click", () => {
+  nodes.forEach(n => { n.vx = 0; n.vy = 0; });
+});
+
+document.getElementById("addNodeBtn").addEventListener("click", () => {
+  const title = prompt("Enter Knowledge Node Concept / Standard:");
+  if (!title) return;
+  const desc = prompt("Enter brief technical summary / notes:") || "Custom grid engineering insight.";
+  const newNode = {
+    id: "custom_" + Date.now(),
+    label: title,
+    category: "tech",
+    size: 11,
+    desc: desc,
+    x: (Math.random() - 0.5) * 80,
+    y: (Math.random() - 0.5) * 80,
+    vx: 0,
+    vy: 0
+  };
+  nodes.push(newNode);
+  const der = nodes.find(n => n.id === "der");
+  if (der) links.push({ source: der, target: newNode });
+});
+
+document.querySelectorAll(".graph-filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".graph-filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentFilter = btn.getAttribute("data-filter");
+  });
+});
+
+window.addEventListener("resize", () => {
+  const rect = container.getBoundingClientRect();
+  canvas.width = rect.width * window.devicePixelRatio;
+  canvas.height = rect.height * window.devicePixelRatio;
+  ctx.resetTransform();
+  ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+  drawGridHistoryChart();
+});
+
+initGraph();
+animate();
+
+
+/* ==========================================================================
+ * 4. TRENDS & RESEARCH ACTIONS
+ * ========================================================================== */
+document.querySelectorAll(".trend-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const p = btn.getAttribute("data-prompt");
+    sendChatMessage(p);
+  });
+});
+
+
+/* ==========================================================================
+ * 5. ENGINEERING CALCULATOR & P.ENG DEVELOPMENT
+ * ========================================================================== */
+function updateDerCalculation() {
+  const p = parseFloat(document.getElementById("calcP").value) || 0;
+  const q = parseFloat(document.getElementById("calcQ").value) || 0;
+  const r = parseFloat(document.getElementById("calcR").value) || 0;
+  const x = parseFloat(document.getElementById("calcX").value) || 0;
+  const v = (parseFloat(document.getElementById("calcV").value) || 13.8) * 1000;
+
+  const deltaV = (p * 1000 * r + q * 1000 * x) / v;
+  const percentRise = (deltaV / v) * 100;
+
+  const resEl = document.getElementById("calcResult");
+  resEl.textContent = `${deltaV.toFixed(1)} V (${percentRise.toFixed(2)}%)`;
+  if (percentRise > 2.0) {
+    resEl.style.color = "#ff4444";
+  } else {
+    resEl.style.color = "var(--circuit-green)";
+  }
+}
+
+["calcP", "calcQ", "calcR", "calcX", "calcV"].forEach(id => {
+  document.getElementById(id).addEventListener("input", updateDerCalculation);
+});
+updateDerCalculation();
+
+document.getElementById("sendCalcToAgent").addEventListener("click", () => {
+  const p = document.getElementById("calcP").value;
+  const q = document.getElementById("calcQ").value;
+  const r = document.getElementById("calcR").value;
+  const x = document.getElementById("calcX").value;
+  const v = document.getElementById("calcV").value;
+  const res = document.getElementById("calcResult").textContent;
+
+  sendChatMessage(`Upgrade, I calculated a DER feeder voltage rise study with parameters: P=${p}kW, Q=${q}kVAR, Feeder R=${r}Ω, X=${x}Ω, V_nom=${v}kV, giving result: ${res}. Verify if this complies with IEEE 1547 and utility distribution system code voltage tolerance limits.`);
+});
+
+document.getElementById("evalWorkBtn").addEventListener("click", () => {
+  sendChatMessage("Upgrade, review my P.Eng competency progress (1.1 Codes, 1.2 Design, 1.3 Testing, 3.1 Ethics) and generate a brief competency verification report for my experience record.");
+});
+
+
+/* ==========================================================================
+ * 6. VIEW TAB SWITCHER (FOR FOCUSED DECK NAVIGATION)
+ * ========================================================================== */
+const workspace = document.getElementById("workspace");
+const tabBtns = document.querySelectorAll(".tab-btn");
+
+tabBtns.forEach(btn => {
+  btn.addEventListener("click", () => {
+    tabBtns.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const view = btn.getAttribute("data-view");
+
+    if (view === "all") {
+      workspace.classList.remove("tab-mode-active");
+      document.querySelectorAll(".panel, .sub-panel").forEach(p => p.classList.remove("active-panel"));
+      setTimeout(drawGridHistoryChart, 50);
+    } else {
+      workspace.classList.add("tab-mode-active");
+      document.querySelectorAll(".panel, .sub-panel").forEach(p => {
+        if (p.getAttribute("data-panel-type") === view) {
+          p.classList.add("active-panel");
+        } else {
+          p.classList.remove("active-panel");
+        }
+      });
+      if (view === "grid") {
+        setTimeout(drawGridHistoryChart, 60);
+      }
+      if (view === "graph") {
+        setTimeout(() => {
+          const rect = container.getBoundingClientRect();
+          canvas.width = rect.width * window.devicePixelRatio;
+          canvas.height = rect.height * window.devicePixelRatio;
+          ctx.resetTransform();
+          ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+          transform.x = rect.width / 2;
+          transform.y = rect.height / 2;
+        }, 50);
+      }
+    }
+  });
+});
+</script>
+
+</body>
+</html>
